@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 # install npm global packages from a backup file
-echo "Enter the importing filename:"
-read importFile
+importFile="npm_global_pkgs.bkp"
 list="$(cat "$importFile")"
-echo "npm i -g $list"
-npm i -g $list
+echo "npm install --global $list"
+npm install --global $list

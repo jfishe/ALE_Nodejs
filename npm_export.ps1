@@ -4,41 +4,60 @@
 
 .GUID 36322aa2-eb4b-4deb-bedd-390d23f47e36
 
-.AUTHOR fishe
+.AUTHOR jdfenw@gmail.com
 
-.COMPANYNAME 
+.COMPANYNAME John D. Fisher
 
-.COPYRIGHT 
+.COPYRIGHT Copyright (c) 2019 John D. Fisher
 
-.TAGS 
+.TAGS
 
-.LICENSEURI 
+.LICENSEURI
 
-.PROJECTURI 
+https://github.com/jfishe/ALE_Nodejs/blob/master/LICENSE.md
 
-.ICONURI 
+.PROJECTURI
 
-.EXTERNALMODULEDEPENDENCIES 
+https://github.com/jfishe/ALE_Nodejs
 
-.REQUIREDSCRIPTS 
+.ICONURI
 
-.EXTERNALSCRIPTDEPENDENCIES 
+.EXTERNALMODULEDEPENDENCIES
+
+Pscx
+
+.REQUIREDSCRIPTS
+
+.EXTERNALSCRIPTDEPENDENCIES
+
+npm
+[System.IO.Path]::GetTempFileName()
 
 .RELEASENOTES
 
 
 #>
 
-<# 
+<#
 
-.DESCRIPTION 
- export npm global packages to a backup file 
+.DESCRIPTION
+ Export npm global packages to a backup file npm_global_pkgs.bkp
 
-#> 
+.LINK
+
+https://github.com/jfishe/ALE_Nodejs
+
+#>
 Param()
 
-Get-Content npm_global_pkgs.bkp |
-    ForEach-Object -Process {
-        Write-Output "npm i -g $_"
-        npm install --global $_
-    }
+$exportFile = "npm_global_pkgs.bkp"
+$tmpFile = [System.IO.Path]::GetTempFileName()
+
+Write-Output "Packages exported to ${exportFile}:"
+npm list --global --depth=0 --parseable | Select-Object -Skip 1 |
+    ForEach-Object {$_ -replace ".*\\",""} | Tee-Object -FilePath "$tmpFile"
+
+# Use Linux EOL for cross-platform compatibility.
+ConvertTo-UnixLineEnding -Path $tmpFile -Destination $exportFile
+
+Remove-Item -Path "$tmpFile"

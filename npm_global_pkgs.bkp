@@ -4,6 +4,5 @@ htmlhint
 markdownlint-cli
 prettier
 stylelint
-stylelint-config-recommended
 stylelint-config-sass-guidelines
 stylelint-config-standard
